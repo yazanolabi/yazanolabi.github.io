@@ -1,9 +1,0 @@
-DirectoryIndex index.html
-RewriteEngine On
-
-RewriteCond %{THE_REQUEST} /index\.html [NC]
-RewriteRule ^(.*?)index\.html$ /$1 [L,R=301,NC,NE]
-
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{DOCUMENT_ROOT}/$1/index\.html -f [NC]
-RewriteRule ^(.+?)/?$ /$1/index.html [L]
