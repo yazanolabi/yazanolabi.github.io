@@ -1,0 +1,142 @@
+(function () {
+    
+	// Define our constructor
+	this.YSlider = function () {
+		// Create global element references
+        this.sliderArray = null;
+        this.current = null;
+        this.prevSlide = null;
+        this.nextSlide = null;
+        this.index = 0;
+
+		// Define option defaults
+		var defaults = {
+			sliderContainer: ".Y-Slider",
+			sliderWrapper: ".Y-Slider-Wrapper",
+			sliderSlides: ".Y-Slider-Slide",
+            navClass: ".Y-Slider-Navigation",
+			navButtons: true,
+			overlay: true,
+		};
+
+		// Create options by extending defaults with the passed in arugments
+		if (arguments[0] && typeof arguments[0] === "object") {
+			this.options = extendDefaults(defaults, arguments[0]);
+        }
+        
+        initilaizeSlider.call(this);
+        initializeEvents.call(this);
+	}
+
+	// Public Methods
+
+    YSlider.prototype.next = function () {
+        if (this.index == this.sliderArray.length - 1)
+            this.index = 0;
+        else
+            this.index++;
+        setSlide.call(this);
+    };
+    YSlider.prototype.prev = function () {
+        if (this.index == 0)
+            this.index = this.sliderArray.length - 1;
+        else
+            this.index--;
+        setSlide.call(this);
+	};;
+
+	// Private Methods
+
+	// Utility method to extend defaults with user options
+	function extendDefaults(source, properties) {
+		var property;
+		for (property in properties) {
+			if (properties.hasOwnProperty(property)) {
+				source[property] = properties[property];
+			}
+		}
+		return source;
+	}
+
+	// Init Slider
+	function initilaizeSlider(options) {
+		// Check if the slider is not empty
+		if ((this.options.sliderSlides).length) {
+			this.sliderArray = document.querySelectorAll(
+				this.options.sliderSlides
+			);
+		}
+
+		// If navButtons option is false, hide them
+		if (this.options.navButtons) {
+			document.querySelector(this.options.navClass);
+		}
+
+        for (let i = 0; i < this.sliderArray.length; i++) {
+
+			// If overlay is true display it
+			if (this.options.overlay === true) {
+				this.sliderArray[i].classList.add("overlay");
+            }
+            
+            // indexing the slides
+			this.sliderArray[i].setAttribute("Y-Slide-id", i);
+                
+            // this.sliderArray[i].classList.contains("Y-Slider-Active")
+            
+            this.sliderArray[i].classList.remove("Y-Slider-Active");
+        }
+        
+        // resetting defaults
+        this.index = 0;
+        
+        setSlide.call(this);
+
+    }
+
+	// Init Events
+	function initializeEvents() {
+		if (this.options.navButtons) {
+			document.querySelector(this.options.navClass).querySelector('.next').addEventListener("click", this.next.bind(this));
+			document.querySelector(this.options.navClass).querySelector('.prev').addEventListener("click", this.prev.bind(this));
+		}
+    }
+    
+    function setSlide() {
+        this.sliderArray[this.index].classList.add("Y-Slider-Active");
+        this.current = this.sliderArray[this.index];
+        if (this.index == 0) {
+            this.prevSlide = this.sliderArray[this.sliderArray.length - 1];
+		} else {
+            this.prevSlide = this.sliderArray[this.index - 1];
+		}
+		this.prevSlide.classList.remove("Y-Slider-Active");
+        this.prevSlide.style.cssText = "";
+        if (this.index == this.sliderArray.length - 1) {
+            this.nextSlide = this.sliderArray[0];
+		} else {
+            this.nextSlide = this.sliderArray[this.index + 1];
+		}
+		this.nextSlide.classList.remove("Y-Slider-Active");
+        this.nextSlide.style.cssText = "";
+        // console.log(JSON.parse(this.current.getAttribute("animation-data")));
+        if (this.current.getAttribute("animation-data")) {
+            animate(this.current, this.current.getAttribute("animation-data"), "0.5s", "0.5s");
+        }
+    }
+
+    function animate(element, animation, duration = "0.5s", delay = "0.1s") {
+        
+        // animation.forEach(anim => {
+        //     element.style
+        // });
+        // for (const [key, value] of Object.entries(animation)) {
+        //     console.log(`${key}: ${JSON.stringify(value)}`);
+        //     element.style.key = JSON.stringify(value);
+        // }
+        setTimeout(function () {
+            element.style.cssText = animation + `transition: ${duration}`;
+        }, delay);
+
+    } 
+}());

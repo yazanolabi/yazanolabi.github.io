@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Y-Slider</title>
+</head>
+<body>
+    <div class="Y-Slider">
+        <div class="Y-Slider-Wrapper">
+            <div class="Y-Slider-Slide Y-Slider-Active" animation-data="transform: translateX(-10px); margin-top: 10px; height: 50%; width: 50%;">
+                <img src="img/p1.jpg">
+                <div class="Y-Slider-Text">
+                    <h1>Y-Slider FTW</h1>
+                    <p>GG WP</p>
+                </div>
+            </div>
+            <div class="Y-Slider-Slide" animation-data="transform: translateX(30%); margin-top: 10px; height: 70%; width: 70%;">
+                <img src="img/p2.jpg">
+                <div class="Y-Slider-Text">
+                    <h1>Y-Slider FTW</h1>
+                    <p>GG WP</p>
+                </div>
+            </div>
+            <div class="Y-Slider-Slide" animation-data="transform: translateY(30%) rotate(45deg); height: 40%; width: 40%;">
+                <img src="img/p3.jpg">
+                <div class="Y-Slider-Text">
+                    <h1>Y-Slider FTW</h1>
+                    <p>GG WP</p>
+                </div>
+            </div>
+            <div class="Y-Slider-Slide" animation-data="top:0; height: 50%; width: 50%;">
+                <img src="img/p4.jpg">
+                <div class="Y-Slider-Text">
+                    <h1>Y-Slider FTW</h1>
+                    <p>GG WP</p>
+                </div>
+            </div>
+            <div class="Y-Slider-Slide" animation-data="bottom: 10px; right: 10px; height: 50%; width: 50%;">
+                <img src="img/p5.jpg">
+                <div class="Y-Slider-Text">
+                    <h1>Y-Slider FTW</h1>
+                    <p>GG WP</p>
+                </div>
+            </div>
+            <div class="Y-Slider-Slide" animation-data="bottom:40%; left:10px; height: 50%; width: 50%;">
+                <img src="img/p6.jpg">
+                <div class="Y-Slider-Text">
+                    <h1>Y-Slider FTW</h1>
+                    <p>GG WP</p>
+                </div>
+            </div>
+        </div>
+        <div class="Y-Slider-Navigation">
+            <button class="prev"><</button>
+            <button class="next">></button>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        var slider = new YSlider({
+            sliderContainer: ".Y-Slider",
+            sliderWrapper: ".Y-Slider-Wrapper",
+            sliderSlides: ".Y-Slider-Slide",
+        });
+    </script>
+</body>
+</html>

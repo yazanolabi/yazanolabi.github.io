@@ -1,0 +1,99 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.Y-Slider {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.Y-Slider-Wrapper {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.Y-Slider-Navigation .next, 
+.Y-Slider-Navigation .prev {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 25px;
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    z-index: 15;
+}
+.Y-Slider-Navigation .next {
+    right: 25px;
+}
+.Y-Slider-Navigation .prev {
+    left: 25px;
+}
+
+.Y-Slider-Slide {
+    position: absolute;
+    display: none;
+    width: 100%;
+    height: 100%;
+    justify-content: flex-start;
+    align-items: center;
+    transition: all 0.5s ease;
+}
+.Y-Slider-Slide.Y-Slider-Active {
+    display: flex;
+    opacity: 1;
+    visibility: visible;
+    z-index: 10;
+}
+.Y-Slider-Slide .Y-Slider-Img,
+.Y-Slider-Slide img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+.Y-Slider-Slide.overlay::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(120deg, #232323, #33d0ff);
+    opacity: 0.8;
+    mix-blend-mode: overlay;
+}
+.Y-Slider-Slide.overlay::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(120deg, #232323, #002530);
+    opacity: 0.1;
+    z-index: 1;
+}
+.Y-Slider-Slide .Y-Slider-Text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 1;
+    color: #fff;
+    text-shadow: 1px 1px 1px black;
+    text-shadow: 0 0.5px 4px rgba(0,0,0,0.4);
+}
