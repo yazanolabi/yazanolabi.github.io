@@ -27,16 +27,47 @@
         initilaizeSlider.call(this);
         initializeEvents.call(this);
 	}
-
+    
 	// Public Methods
 
-    YSlider.prototype.next = function () {
-        if (this.index == this.sliderArray.length - 1)
-            this.index = 0;
-        else
-            this.index++;
-        setSlide.call(this);
+    YSlider.prototype.next = async function () {
+
+        console.log("==SEQUENTIAL START==");
+
+
+        if (this.current.getAttribute("animation-out")) {
+            console.log("animating in ....");
+			await animate(
+				this.current,
+				this.current.getAttribute("animation-out"),
+				this.current.getAttribute("animation-duration")
+			);
+            console.log("animation done");
+		}
+        this.current.classList.remove("Y-Slider-Active");
+        this.current.style.cssText = "";
+        this.nextSlide.classList.add("Y-Slider-Active");
+        if (this.nextSlide.getAttribute("animation-in")) {
+			console.log("animating out ....");
+			await animate(
+				this.nextSlide,
+				this.nextSlide.getAttribute("animation-in"),
+				this.current.getAttribute("animation-duration")
+			);
+			console.log("animation done");
+		}
+        await setIndex.call(this, dist= "next");
+		
+        console.log("dont setting index");
+        
     };
+    // YSlider.prototype.next = function () {
+    //     if (this.index == this.sliderArray.length - 1)
+    //         this.index = 0;
+    //     else
+    //         this.index++;
+    //     setSlide.call(this);
+    // };
     YSlider.prototype.prev = function () {
         if (this.index == 0)
             this.index = this.sliderArray.length - 1;
@@ -82,14 +113,16 @@
             // indexing the slides
 			this.sliderArray[i].setAttribute("Y-Slide-id", i);
                 
-            // this.sliderArray[i].classList.contains("Y-Slider-Active")
-            
             this.sliderArray[i].classList.remove("Y-Slider-Active");
         }
         
         // resetting defaults
         this.index = 0;
-        
+        this.sliderArray[this.index].classList.add("Y-Slider-Active");
+        this.current = this.sliderArray[this.index];
+        if (this.current.getAttribute("animation-in")) {
+            animate(this.current, this.current.getAttribute("animation-in"), "0.5s", "0.5s");
+        }
         setSlide.call(this);
 
     }
@@ -120,9 +153,40 @@
 		this.nextSlide.classList.remove("Y-Slider-Active");
         this.nextSlide.style.cssText = "";
         // console.log(JSON.parse(this.current.getAttribute("animation-data")));
-        if (this.current.getAttribute("animation-data")) {
-            animate(this.current, this.current.getAttribute("animation-data"), "0.5s", "0.5s");
+        if (this.current.getAttribute("animation-in")) {
+            animate(this.current, this.current.getAttribute("animation-in"), "0.5s", "0.5s");
         }
+    }
+
+    function setIndex() {
+        if (dist == "next") {
+            if (this.index == this.sliderArray.length - 1) {
+                this.index = 0;
+            } else {
+                this.index++;
+            }
+        } else {
+            if (this.index == 0) {
+                this.index = this.sliderArray.length - 1;
+			} else {
+                this.index--;
+			}
+        }
+        this.current = this.sliderArray[this.index];
+		if (this.index == 0) {
+			this.prevSlide = this.sliderArray[this.sliderArray.length - 1];
+		} else {
+			this.prevSlide = this.sliderArray[this.index - 1];
+		}
+		if (this.index == this.sliderArray.length - 1) {
+			this.nextSlide = this.sliderArray[0];
+		} else {
+			this.nextSlide = this.sliderArray[this.index + 1];
+        }
+        this.nextSlide.classList.remove("Y-Slider-Active");
+        this.prevSlide.classList.remove("Y-Slider-Active");
+		this.nextSlide.style.cssText = "";
+		this.prevSlide.style.cssText = "";
     }
 
     function animate(element, animation, duration = "0.5s", delay = "0.1s") {
@@ -134,9 +198,44 @@
         //     console.log(`${key}: ${JSON.stringify(value)}`);
         //     element.style.key = JSON.stringify(value);
         // }
-        setTimeout(function () {
-            element.style.cssText = animation + `transition: ${duration}`;
-        }, delay);
+            element.style.cssText = `transition: ${duration};` + animation ;
 
+		return new Promise((resolve) => {
+			setTimeout(function () {
+                resolve("animating");
+                
+			}, 1000);
+		});
     } 
 }());
+
+
+var resolveAfter2Seconds = function () {
+	console.log("starting slow promise");
+	return new Promise((resolve) => {
+		setTimeout(function () {
+			resolve("slow");
+			console.log("slow promise is done");
+		}, 2000);
+	});
+};
+
+var resolveAfter1Second = function () {
+	console.log("starting fast promise");
+	return new Promise((resolve) => {
+		setTimeout(function () {
+			resolve("fast");
+			console.log("fast promise is done");
+		}, 1000);
+	});
+};
+var sequentialStart = async function () {
+	console.log("==SEQUENTIAL START==");
+
+	// 1. Execution gets here almost instantly
+	const slow = await resolveAfter2Seconds();
+	console.log(slow); // 2. this runs 2 seconds after 1.
+
+	const fast = await resolveAfter1Second();
+	console.log(fast); // 3. this runs 3 seconds after 1.
+};
