@@ -31,36 +31,57 @@
 	// Public Methods
 
     YSlider.prototype.next = async function () {
+		// if (this.current.getAttribute("animation-out")) {
+		//     console.log("animating in ....");
+		// 	await animate(
+		// 		this.current,
+		// 		this.current.getAttribute("animation-out"),
+		// 		this.current.getAttribute("animation-duration")
+		// 	);
+		//     console.log("animation done");
+		// }
+		// this.current.classList.remove("Y-Slider-Active");
+		// this.current.style.cssText = "";
+		// this.nextSlide.classList.add("Y-Slider-Active");
+		// if (this.nextSlide.getAttribute("animation-in")) {
+		// 	console.log("animating out ....");
+		// 	await animate(
+		// 		this.nextSlide,
+		// 		this.nextSlide.getAttribute("animation-in"),
+		// 		this.current.getAttribute("animation-duration")
+		// 	);
+		// 	console.log("animation done");
+		// }
+		// await setIndex.call(this, dist= "next");
 
-        console.log("==SEQUENTIAL START==");
+		// console.log("dont setting index");
+		// this.nextSlide.classList.add("Y-Slider-Active");
 
-
-        if (this.current.getAttribute("animation-out")) {
-            console.log("animating in ....");
-			await animate(
+		if (this.current.getAttribute("animate-out-next")) {
+			animateCSS(
 				this.current,
-				this.current.getAttribute("animation-out"),
-				this.current.getAttribute("animation-duration")
+				this.current.getAttribute("animate-out-next")
 			);
-            console.log("animation done");
 		}
-        this.current.classList.remove("Y-Slider-Active");
-        this.current.style.cssText = "";
-        this.nextSlide.classList.add("Y-Slider-Active");
-        if (this.nextSlide.getAttribute("animation-in")) {
-			console.log("animating out ....");
-			await animate(
+		if (this.nextSlide.getAttribute("animate-in-next")) {
+			animateCSS(
 				this.nextSlide,
-				this.nextSlide.getAttribute("animation-in"),
-				this.current.getAttribute("animation-duration")
+				this.nextSlide.getAttribute("animate-in-next")
 			);
-			console.log("animation done");
 		}
-        await setIndex.call(this, dist= "next");
-		
-        console.log("dont setting index");
-        
-    };
+		this.nextSlide.classList.add("Y-Slider-Active");
+		var _this = this;
+		this.current.addEventListener("animationend", await function() {
+			_this.current.classList.remove("Y-Slider-Active");
+			setIndex.call(_this, (dist = "next"));
+		});
+		// if (this.nextSlide.getAttribute("animate-in-next")) {
+		// 	animateCSS(
+		// 		this.current,
+		// 		this.current.getAttribute("animate-in-next")
+		// 	);
+		// }
+	};
     // YSlider.prototype.next = function () {
     //     if (this.index == this.sliderArray.length - 1)
     //         this.index = 0;
@@ -190,52 +211,64 @@
     }
 
     function animate(element, animation, duration = "0.5s", delay = "0.1s") {
-        
-        // animation.forEach(anim => {
-        //     element.style
-        // });
-        // for (const [key, value] of Object.entries(animation)) {
-        //     console.log(`${key}: ${JSON.stringify(value)}`);
-        //     element.style.key = JSON.stringify(value);
-        // }
-            element.style.cssText = `transition: ${duration};` + animation ;
+        element.style.cssText = `transition: ${duration};` + animation ;
 
 		return new Promise((resolve) => {
 			setTimeout(function () {
                 resolve("animating");
                 
-			}, 1000);
+			}, 500);
 		});
-    } 
+	} 
+	const animateCSS = (element, animation, prefix = "animate__") => {
+		new Promise((resolve, reject) => {
+			const animationName = `${animation}`;
+			const node = element;
+
+			node.classList.add(`${prefix}animated`, animationName);
+
+			// When the animation ends, we clean the classes and resolve the Promise
+			function handleAnimationEnd() {
+				node.classList.remove(`${prefix}animated`, animationName);
+				resolve("Animation ended");
+			}
+
+			node.addEventListener("animationend", handleAnimationEnd, {
+				once: true,
+			});
+		});
+	}
+
 }());
 
 
-var resolveAfter2Seconds = function () {
-	console.log("starting slow promise");
-	return new Promise((resolve) => {
-		setTimeout(function () {
-			resolve("slow");
-			console.log("slow promise is done");
-		}, 2000);
-	});
-};
+// var resolveAfter2Seconds = function () {
+// 	console.log("starting slow promise");
+// 	return new Promise((resolve) => {
+// 		setTimeout(function () {
+// 			resolve("slow");
+// 			console.log("slow promise is done");
+// 		}, 2000);
+// 	});
+// };
 
-var resolveAfter1Second = function () {
-	console.log("starting fast promise");
-	return new Promise((resolve) => {
-		setTimeout(function () {
-			resolve("fast");
-			console.log("fast promise is done");
-		}, 1000);
-	});
-};
-var sequentialStart = async function () {
-	console.log("==SEQUENTIAL START==");
+// var resolveAfter1Second = function () {
+// 	console.log("starting fast promise");
+// 	return new Promise((resolve) => {
+// 		setTimeout(function () {
+// 			resolve("fast");
+// 			console.log("fast promise is done");
+// 		}, 1000);
+// 	});
+// };
+// var sequentialStart = async function () {
+// 	console.log("==SEQUENTIAL START==");
 
-	// 1. Execution gets here almost instantly
-	const slow = await resolveAfter2Seconds();
-	console.log(slow); // 2. this runs 2 seconds after 1.
+// 	// 1. Execution gets here almost instantly
+// 	const slow = await resolveAfter2Seconds();
+// 	console.log(slow); // 2. this runs 2 seconds after 1.
 
-	const fast = await resolveAfter1Second();
-	console.log(fast); // 3. this runs 3 seconds after 1.
-};
+// 	const fast = await resolveAfter1Second();
+// 	console.log(fast); // 3. this runs 3 seconds after 1.
+// };
+
