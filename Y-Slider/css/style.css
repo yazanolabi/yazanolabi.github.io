@@ -44,9 +44,9 @@ body {
 
 .Y-Slider-Slide {
     position: absolute;
-    display: none;
-    /* display: flex; */
-    /* visibility: hidden; */
+    /* display: none; */
+    display: flex;
+    visibility: hidden;
     width: 100%;
     height: 100%;
     justify-content: flex-start;
@@ -55,7 +55,7 @@ body {
     animation-fill-mode: forwards;
 }
 .Y-Slider-Slide.Y-Slider-Active {
-    display: flex;
+    /* display: flex; */
     z-index: 10;
     
 }

@@ -30,65 +30,31 @@
     
 	// Public Methods
 
-    YSlider.prototype.next = async function () {
-		// if (this.current.getAttribute("animation-out")) {
-		//     console.log("animating in ....");
-		// 	await animate(
-		// 		this.current,
-		// 		this.current.getAttribute("animation-out"),
-		// 		this.current.getAttribute("animation-duration")
-		// 	);
-		//     console.log("animation done");
-		// }
-		// this.current.classList.remove("Y-Slider-Active");
-		// this.current.style.cssText = "";
-		// this.nextSlide.classList.add("Y-Slider-Active");
-		// if (this.nextSlide.getAttribute("animation-in")) {
-		// 	console.log("animating out ....");
-		// 	await animate(
-		// 		this.nextSlide,
-		// 		this.nextSlide.getAttribute("animation-in"),
-		// 		this.current.getAttribute("animation-duration")
-		// 	);
-		// 	console.log("animation done");
-		// }
-		// await setIndex.call(this, dist= "next");
-
-		// console.log("dont setting index");
-		// this.nextSlide.classList.add("Y-Slider-Active");
-
-		if (this.current.getAttribute("animate-out-next")) {
-			animateCSS(
-				this.current,
-				this.current.getAttribute("animate-out-next")
-			);
-		}
-		if (this.nextSlide.getAttribute("animate-in-next")) {
-			animateCSS(
-				this.nextSlide,
-				this.nextSlide.getAttribute("animate-in-next")
-			);
-		}
-		this.nextSlide.classList.add("Y-Slider-Active");
+    YSlider.prototype.next = function () {
+		var cur = this.current;
+		var nxt = this.nextSlide;
+		var prv = this.prevSlide;
 		var _this = this;
-		this.current.addEventListener("animationend", await function() {
-			_this.current.classList.remove("Y-Slider-Active");
-			setIndex.call(_this, (dist = "next"));
+		setIndex.call(_this, (dist = "next"));
+		if (cur.getAttribute("animate-out-next")) {
+			animateCSS(
+				cur,
+				cur.getAttribute("animate-out-next")
+			);
+		}
+		cur.addEventListener("animationend", function () {
+			cur.classList.remove("Y-Slider-Active");
 		});
-		// if (this.nextSlide.getAttribute("animate-in-next")) {
-		// 	animateCSS(
-		// 		this.current,
-		// 		this.current.getAttribute("animate-in-next")
-		// 	);
-		// }
+		if (nxt.getAttribute("animate-in-next")) {
+			animateCSS(
+				nxt,
+				nxt.getAttribute("animate-in-next")
+			);
+		}
+		nxt.classList.add("Y-Slider-Active");
+		
+		
 	};
-    // YSlider.prototype.next = function () {
-    //     if (this.index == this.sliderArray.length - 1)
-    //         this.index = 0;
-    //     else
-    //         this.index++;
-    //     setSlide.call(this);
-    // };
     YSlider.prototype.prev = function () {
         if (this.index == 0)
             this.index = this.sliderArray.length - 1;
@@ -204,10 +170,7 @@
 		} else {
 			this.nextSlide = this.sliderArray[this.index + 1];
         }
-        this.nextSlide.classList.remove("Y-Slider-Active");
-        this.prevSlide.classList.remove("Y-Slider-Active");
-		this.nextSlide.style.cssText = "";
-		this.prevSlide.style.cssText = "";
+       
     }
 
     function animate(element, animation, duration = "0.5s", delay = "0.1s") {
